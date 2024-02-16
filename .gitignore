@@ -1,0 +1,4 @@
+*.swp
+/docker/mysql/
+*.DS_STORE
+/data

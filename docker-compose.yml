@@ -1,0 +1,75 @@
+version: '3.7'
+services:
+  # PHP Service
+  main:
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+    container_name: main
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: main
+      SERVICE_TAGS: dev
+    working_dir: /var/www/html
+    ports:
+      - '9002:9000'
+    volumes:
+      - ./main:/var/www/html
+      - ./scripts:/var/www/html/scripts
+      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/custom.ini
+    networks:
+      - app-network
+
+  # Webserver Service
+  hosting:
+    image: nginx:alpine
+    container_name: hosting
+    restart: unless-stopped
+    tty: true
+    ports:
+      - '8081:80'
+      - '8449:443'
+    volumes:
+      - ./main:/var/www/html
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - app-network
+
+  # Node Service - Vite
+  node:
+    image: node:18-alpine
+    container_name: node
+    volumes:
+      - ./main:/var/www/html
+      - ./docker/scripts:/var/www/html/scripts
+    command: sh scripts/npm.sh
+    ports:
+      - '5179:5179'
+      - '5178:5178'
+    working_dir: /var/www/html
+    networks:
+      - app-network
+
+  # SQL Service
+  mysql-db:
+    image: mysql:8.0.33
+    container_name: mysql-db
+    tty: true
+    restart: unless-stopped
+    ports:
+      - '3309:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: rth
+      MYSQL_USER: rth
+      MYSQL_PASSWORD: Password123
+    volumes:
+      - ./docker/mysql:/var/lib/mysql
+    networks:
+      - app-network
+
+# Docker Networks
+networks:
+  app-network:
+    driver: bridge

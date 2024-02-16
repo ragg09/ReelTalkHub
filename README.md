@@ -12,21 +12,61 @@ WBS & PROGRESS: https://docs.google.com/spreadsheets/d/1peMIW0Iv2Ce5i07Mu0mytw8k
 
 ### FE
 
--   Next.js
+-   React via Inertia
 -   Tailwind
 -   Redux Toolkit
 -   TypeScript
 
 ### BE
 
--   Laravel
+-   Laravel v10.44.0
+-   PHP v8.2.15
 
 ### Tools
 
 -   Docker
+-   NGINX
 -   ESLint
 -   Makefile
 
-## Getting Started
+## Getting Started (Quick Guide)
 
-. . .
+### 1. Clone repository in your local
+
+```
+git clone git@github.com:ragg09/ReelTalkHub.git
+```
+
+_note: use ssh when you clone_
+
+### 2. Create .env file.
+
+```
+make env
+```
+
+### 3. Add Database Credentials
+
+update the `DB_` variables part. To add the mysql credentials pleaser refer from
+`docker-compose.yml`.
+
+```
+DB_CONNECTION=mysql
+DB_HOST=laravel-database
+DB_PORT=3309
+DB_DATABASE=<placeholder>
+DB_USERNAME=<placeholder>
+DB_PASSWORD=<placeholder>
+```
+
+### 4. Build the docker container & configuration
+
+```
+make setup
+```
+
+### 5. Visit it the application in browser
+
+```
+http://localhost:8081
+```
