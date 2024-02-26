@@ -8,6 +8,8 @@ setup:
 	@make optimize-clear
 	@make key
 	@make migrate
+	@make seed
+	@make storage-link
 build:
 	docker-compose build --no-cache --force-rm
 up:
@@ -24,5 +26,9 @@ key:
 	docker-compose exec main bash -c "php artisan key:generate"
 migrate:
 	docker-compose exec main bash -c "php artisan migrate"
+seed:
+	docker-compose exec main bash -c "php artisan db:seed"
+storage-link:
+	docker-compose exec main bash -c "php artisan storage:link"
 laracon:
 	docker-compose exec main bash -c "$$args"

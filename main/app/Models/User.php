@@ -42,4 +42,19 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function media()
+    {
+        return $this->belongsToMany(Media::class);
+    }
+
+    public function comments()
+    {
+        return $this->belongsToMany(Comment::class, 'user_media_comments');
+    }
+
+    public function reacts()
+    {
+        return $this->belongsToMany(React::class, 'user_react_comments');
+    }
 }
