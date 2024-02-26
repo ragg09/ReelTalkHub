@@ -1,8 +1,12 @@
 import "./bootstrap";
 import "../css/app.css";
 
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "@/mui-style.config";
+
 import { createRoot } from "react-dom/client";
 import { createInertiaApp } from "@inertiajs/react";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
@@ -23,6 +27,7 @@ createInertiaApp({
             <ThemeProvider theme={theme}>
                 <Provider store={store}>
                     <App {...props} />
+                    <ToastContainer />
                 </Provider>
             </ThemeProvider>
         );
