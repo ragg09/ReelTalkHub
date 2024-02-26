@@ -32,3 +32,5 @@ storage-link:
 	docker-compose exec main bash -c "php artisan storage:link"
 laracon:
 	docker-compose exec main bash -c "$$args"
+reacon:
+	docker-compose exec node sh -c "$$args"
