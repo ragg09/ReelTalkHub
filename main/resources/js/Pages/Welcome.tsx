@@ -1,5 +1,5 @@
 import { Link, Head } from "@inertiajs/react";
-import { PageProps } from "@/types";
+import { PageProps } from "@/Utils/types";
 
 export default function Welcome({
     auth,
