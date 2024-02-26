@@ -10,10 +10,10 @@ n/a
 
 n/a
 
-## Affected Files
+## Notes
 
 n/a
 
-## Notes
+## Screenshots
 
 n/a
