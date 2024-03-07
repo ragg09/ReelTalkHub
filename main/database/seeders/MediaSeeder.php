@@ -13,6 +13,6 @@ class MediaSeeder extends Seeder
      */
     public function run(): void
     {
-        Media::factory()->count(2)->create();
+        Media::factory()->count(20)->create();
     }
 }

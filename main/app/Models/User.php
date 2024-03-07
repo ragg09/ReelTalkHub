@@ -45,7 +45,7 @@ class User extends Authenticatable
 
     public function media()
     {
-        return $this->belongsToMany(Media::class);
+        return $this->hasMany(Media::class);
     }
 
     public function comments()
