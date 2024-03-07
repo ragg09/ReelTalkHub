@@ -9,14 +9,14 @@ class Media extends Model
 {
     use HasFactory;
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function genres()
     {
         return $this->belongsToMany(Genre::class);
-    }
-
-    public function users()
-    {
-        return $this->belongsToMany(User::class);
     }
 
     public function comments()
@@ -27,5 +27,11 @@ class Media extends Model
     public function reacts()
     {
         return $this->belongsToMany(React::class, 'user_media_reacts');
+    }
+
+    public static function getPaginatedMedia($perPage = 3, $pageNumber = 1)
+    {
+        return self::with(['genres', 'comments', 'reacts', 'user'])
+            ->paginate($perPage, ['*'], 'page', $pageNumber);
     }
 }

@@ -1,28 +1,72 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
-import { PageProps } from "@/Utils/types";
+import { useAppDispatch, useAppSelector } from "@/Redux/hook";
+import { MediaData, UserData } from "@/Utils/types";
+import { useGetMediaQuery } from "@/Redux/Services/mediaAPI";
+import { useEffect, useState } from "react";
+import { MEDIAREQUEST } from "@/Utils/Constants";
+import LoadingSpinner from "@/Components/Loader";
+import { setMediaData } from "@/Redux/Features/mediaSlice";
+import Media from "@/Components/Media";
+import InfiniteScroll from "react-infinite-scroll-component";
+import LoadMore from "@/Components/InfiniteScroll/LoadMore";
+import EndMessage from "@/Components/InfiniteScroll/EndMessage";
 
-export default function Dashboard({ auth }: PageProps) {
-    return (
-        <AuthenticatedLayout
-            user={auth.user}
-            header={
-                <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                    Dashboard
-                </h2>
+interface DashboardProps<
+    T extends Record<string, unknown> = Record<string, unknown>
+> {
+    auth: {
+        user: UserData;
+    };
+}
+
+export default function Dashboard({ auth }: DashboardProps) {
+    const dispatch = useAppDispatch();
+    const [currentPage, setCurrentPage] = useState(MEDIAREQUEST.page);
+    const [hasMore, setHasMore] = useState(true);
+
+    const { data, isLoading } = useGetMediaQuery({
+        page: currentPage,
+        perPage: MEDIAREQUEST.perPage,
+    });
+
+    const { data: mediaContent } = useAppSelector((state) => state.mediaSlice);
+
+    useEffect(() => {
+        if (!isLoading && data) {
+            dispatch(setMediaData(data));
+
+            if (data.current_page === data.last_page) {
+                setHasMore(false);
             }
-        >
+        }
+    }, [isLoading, currentPage, data]);
+
+    const loadNextPage = () => {
+        setTimeout(() => {
+            setCurrentPage((prevPage) => prevPage + 1);
+        }, 1000);
+    };
+
+    if (isLoading) {
+        return <LoadingSpinner />;
+    }
+
+    return (
+        <AuthenticatedLayout user={auth.user}>
             <Head title="Dashboard" />
 
-            <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900 dark:text-gray-100">
-                            You're logged in!
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <InfiniteScroll
+                dataLength={mediaContent.length}
+                next={loadNextPage}
+                hasMore={hasMore}
+                loader={<LoadMore />}
+                endMessage={<EndMessage />}
+            >
+                {mediaContent.map((media: MediaData) => (
+                    <Media key={media.id} {...media} />
+                ))}
+            </InfiniteScroll>
         </AuthenticatedLayout>
     );
 }

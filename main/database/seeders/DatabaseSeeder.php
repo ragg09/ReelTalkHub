@@ -20,8 +20,8 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call([
-            GenreSeeder::class,
             UserSeeder::class,
+            GenreSeeder::class,
             ReactSeeder::class,
             MediaSeeder::class
         ]);
